@@ -1170,3 +1170,87 @@ display:none;
 .trip-tabs label{
 user-select:none;
 }
+
+/* ===========================
+GOOGLE REVIEW
+=========================== */
+
+.google-review-section{
+
+padding:70px 20px;
+
+background:#111;
+
+display:flex;
+
+justify-content:center;
+
+}
+
+.review-card{
+
+max-width:700px;
+
+width:100%;
+
+padding:50px;
+
+text-align:center;
+
+border:2px solid gold;
+
+border-radius:20px;
+
+background:#181818;
+
+box-shadow:0 15px 40px rgba(255,215,0,.15);
+
+}
+
+.review-card h2{
+
+color:gold;
+
+margin-bottom:20px;
+
+}
+
+.review-card p{
+
+color:#ddd;
+
+font-size:18px;
+
+line-height:1.8;
+
+margin-bottom:30px;
+
+}
+
+.review-btn{
+
+display:inline-block;
+
+padding:15px 40px;
+
+background:gold;
+
+color:#000;
+
+font-weight:bold;
+
+text-decoration:none;
+
+border-radius:40px;
+
+transition:.3s;
+
+}
+
+.review-btn:hover{
+
+background:#ffbf00;
+
+transform:translateY(-4px);
+
+}

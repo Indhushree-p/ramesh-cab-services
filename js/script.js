@@ -1,9 +1,15 @@
+// ===============================
+// RAMESH  CAB SERVICES
+// Booking tabs + fare + WhatsApp
+// ===============================
+
 document.addEventListener("DOMContentLoaded", function () {
 
+    const form = document.getElementById("bookingForm");
     const tripType = document.getElementById("tripType");
     const vehicle = document.getElementById("vehicle");
     const priceDisplay = document.getElementById("priceDisplay");
-    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tripRadios = document.querySelectorAll('input[name="tripChoice"]');
 
     function updatePrice() {
         let fare = "Please Select Vehicle";
@@ -34,72 +40,82 @@ document.addEventListener("DOMContentLoaded", function () {
         priceDisplay.value = fare;
     }
 
-    tabButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
-            tabButtons.forEach(function (btn) {
-                btn.classList.remove("active");
+    tripRadios.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            tripType.value = radio.value;
+
+            document.querySelectorAll(".tab-btn").forEach(function (tab) {
+                tab.classList.remove("active");
             });
 
-            button.classList.add("active");
-            tripType.value = button.getAttribute("data-trip");
-
+            radio.parentElement.classList.add("active");
             updatePrice();
         });
     });
 
     vehicle.addEventListener("change", updatePrice);
-
     updatePrice();
-});
 
-// ===============================
-// GOOGLE MAPS
-// ===============================
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-window.initMapFeatures = function () {
+        const trip = tripType.value;
+        const selectedVehicle = vehicle.value;
+        const fare = priceDisplay.value;
 
-    const pickup = document.getElementById("pickup");
-    const drop = document.getElementById("drop");
-    const distance = document.getElementById("distanceResult");
+        const pickup = document.getElementById("pickup").value;
+        const drop = document.getElementById("drop").value;
 
-    if (!pickup || !drop || !distance) return;
+        const date = form.querySelector('input[type="date"]').value;
+        const time = form.querySelector('input[type="time"]').value;
 
-    const options = {
-        componentRestrictions: { country: "in" }
-    };
+        const name = form.querySelector('input[placeholder="Enter your full name"]').value;
+        const email = form.querySelector('input[placeholder="Enter your email"]').value;
+        const phone = form.querySelector('input[placeholder="Enter your phone number"]').value;
+        const details = form.querySelector("textarea").value;
 
-    const pickupAuto = new google.maps.places.Autocomplete(pickup, options);
-    const dropAuto = new google.maps.places.Autocomplete(drop, options);
+        if (!selectedVehicle) {
+            alert("Please select a vehicle.");
+            return;
+        }
 
-    pickupAuto.addListener("place_changed", calculateDistance);
-    dropAuto.addListener("place_changed", calculateDistance);
+        if (fare === "Not Available") {
+            alert("This vehicle is not available for the selected trip type.");
+            return;
+        }
 
-    function calculateDistance() {
+        const message =
+`🚖 *NEW CAB BOOKING*
 
-        if (pickup.value === "" || drop.value === "") return;
+👤 Name : ${name}
 
-        const service = new google.maps.DistanceMatrixService();
+📞 Phone : ${phone}
 
-        service.getDistanceMatrix(
-            {
-                origins: [pickup.value],
-                destinations: [drop.value],
-                travelMode: "DRIVING",
-                unitSystem: google.maps.UnitSystem.METRIC
-            },
-            function (response, status) {
+📧 Email : ${email}
 
-                if (status !== "OK") {
-                    distance.value = "";
-                    return;
-                }
+🚕 Trip Type : ${trip}
 
-                const result = response.rows[0].elements[0];
+🚘 Vehicle : ${selectedVehicle}
 
-                if (result.status === "OK") {
-                    distance.value = result.distance.text;
-                }
-            }
+💰 Fare : ${fare}
+
+📍 Pickup : ${pickup}
+
+🏁 Drop : ${drop}
+
+📅 Date : ${date}
+
+🕒 Time : ${time}
+
+📝 Details :
+${details}
+
+Thank you for choosing Ramesh Cab Services.`;
+
+        window.open(
+            "https://wa.me/919902536970?text=" + encodeURIComponent(message),
+            "_blank"
         );
-    }
-};
+    });
+
+});
